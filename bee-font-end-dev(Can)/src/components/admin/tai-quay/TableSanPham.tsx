@@ -148,8 +148,8 @@ const TableSanPham: React.FC<TableSanPhamProps> = ({
         <Space direction="vertical" style={{ width: "100%" }}>
           {/* Hàng 1: Ảnh */}
           <Image
-            width="100%" // Chiều rộng ảnh chiếm 100% chiều rộng của div
-            height="auto" // Chiều cao tự động để duy trì tỉ lệ của ảnh
+            width="140px"
+            height="auto"
             src={chiTietSanPham.anhUP}
             fallback="http://localhost:8081/admin/api/file/view/fallback.jpg"
             style={{ objectFit: "contain" }} // Giữ tỷ lệ ảnh và không bị cắt
