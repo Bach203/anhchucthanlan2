@@ -21,34 +21,38 @@ import sancat from "~/image/san-cat.jpg";
 import { Link } from "react-router-dom";
 import request from "~/utils/request";
 import { formatGiaTien } from "~/utils/formatResponse";
+import ViewAllButton from "../san-pham/viewAllBtn";
+import "./SPMN.css";
+import "./SPBC.css";
 
 const { Title, Text } = Typography;
 const { Meta } = Card;
+
 const Home: React.FC = () => {
   const [sanPhamMoiNhat, setSanPhamMoiNhat] = useState([]);
   const [sanPhamBanChay, setSanPhamBanChay] = useState([]);
+
   useEffect(() => {
     // Call API sản phẩm mới nhất
     const fetchMoiNhat = async () => {
       try {
         const res = await request.get("san-pham", {
-          params: {
-            page: 1,
-          },
+          params: { page: 1 },
         });
         setSanPhamMoiNhat(res.data.content);
       } catch (error) {
         console.log(error);
-        message.error("Lấy dữ liệu địa hình sân thất bại");
+        message.error("Lấy dữ liệu sản phẩm mới thất bại");
       }
     };
 
     // Call API Sản phẩm bán chạy nhất
-
     const fetchBanChayNhat = async () => {
       try {
-        const res = await request.get("/san-pham/ban-chay-nhat");
-        setSanPhamBanChay(res.data);
+        const res = await request.get("san-pham", {
+          params: { page: 1 },
+        });
+        setSanPhamBanChay(res.data.content);
       } catch (error) {
         console.log(error);
         message.error("Lấy dữ liệu sản phẩm bán chạy nhất thất bại");
@@ -58,7 +62,6 @@ const Home: React.FC = () => {
     fetchMoiNhat();
     fetchBanChayNhat();
   }, []);
-  console.log(sanPhamMoiNhat);
   return (
     <>
       <Carousel autoplay>
@@ -78,7 +81,7 @@ const Home: React.FC = () => {
       <Divider style={{ fontSize: 25, fontWeight: "bold", marginTop: 20 }}>
         SẢN PHẨM MỚI NHẤT
       </Divider>
-      <Row gutter={16}>
+      <Row className="product-card-container" gutter={16}>
         {sanPhamMoiNhat.slice(0, 4).map((product) => (
           <Col key={product.id}>
             <Link
@@ -87,22 +90,49 @@ const Home: React.FC = () => {
             >
               <Card
                 hoverable
-                style={{ width: 267, marginBottom: 10 }}
+                className="Card"
+                style={{ width: 300, marginBottom: 10, position: "relative" }}
                 cover={
-                  <img
-                    style={{ padding: "0px 10px" }}
-                    alt="example"
-                    src={product.listChiTietSanPham[0].anhUP}
-                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: 280,
+                      position: "relative",
+                    }}
+                  >
+                    <img
+                      style={{
+                        padding: "0px 10px",
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        objectFit: "contain",
+                      }}
+                      alt="example"
+                      src={product.listChiTietSanPham[0].anhUP}
+                    />
+                    {/* Div cho phần "CHI TIẾT SẢN PHẨM" */}
+                    <div className="product-details-text">
+                      <Text style={{ color: "white", fontWeight: "bold" }}>
+                        CHI TIẾT SẢN PHẨM
+                      </Text>
+                    </div>
+                  </div>
                 }
               >
+                {/* Khi hover, ẩn tên sản phẩm và giá tiền, chỉ hiển thị "CHI TIẾT SẢN PHẨM" */}
                 <Divider style={{ margin: 0, padding: 0 }} />
-                <Text style={{ textAlign: "left" }} strong>
-                  {product.listChiTietSanPham[0].sanPham.ten}
-                  <Title level={5} style={{ color: "red", margin: 0 }}>
-                    {formatGiaTien(product.listChiTietSanPham[0].giaTien)}
-                  </Title>
-                </Text>
+                <div className="product-info">
+                  <div className="product-name-price">
+                    <Text style={{ textAlign: "left" }} strong>
+                      {product.listChiTietSanPham[0].sanPham.ten}
+                    </Text>
+                    <Title level={5} style={{ color: "red", margin: 0 }}>
+                      {formatGiaTien(product.listChiTietSanPham[0].giaTien)}
+                    </Title>
+                  </div>
+                </div>
               </Card>
             </Link>
           </Col>
@@ -111,8 +141,9 @@ const Home: React.FC = () => {
       <Divider style={{ fontSize: 25, fontWeight: "bold", marginTop: 20 }}>
         SẢN PHẨM BÁN CHẠY
       </Divider>
-      <Row gutter={16}>
-        {sanPhamBanChay.map((product) => (
+      {/* Sản phẩm bán chạy */}
+      <Row className="product-card-container" gutter={16}>
+        {sanPhamBanChay.slice(4, 8).map((product) => (
           <Col key={product.id}>
             <Link
               to={`/san-pham/detail/${product.id}`}
@@ -120,30 +151,55 @@ const Home: React.FC = () => {
             >
               <Card
                 hoverable
-                style={{ width: 267, marginBottom: 10 }}
+                className="bestSellingCard"
+                style={{ width: 300, marginBottom: 10, position: "relative" }}
                 cover={
-                  <img
-                    style={{ padding: "0px 10px" }}
-                    alt="example"
-                    src={`http://localhost:8081/admin/api/file/view/${product.duongDan}`}
-                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: 280,
+                      position: "relative",
+                    }}
+                  >
+                    <img
+                      style={{
+                        padding: "0px 10px",
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        objectFit: "contain",
+                      }}
+                      alt="product"
+                      src={product.listChiTietSanPham[0].anhUP}
+                    />
+                    {/* Div cho phần "CHI TIẾT SẢN PHẨM" */}
+                    <div className="product-details-text">
+                      <Text style={{ color: "white", fontWeight: "bold" }}>
+                        CHI TIẾT SẢN PHẨM
+                      </Text>
+                    </div>
+                  </div>
                 }
               >
                 <Divider style={{ margin: 0, padding: 0 }} />
-                <Text style={{ textAlign: "left" }} strong>
-                  {product.ten}
-                  <Title level={5} style={{ color: "red", margin: 0 }}>
-                    {product.giaMin === product.giaMax
-                      ? `${formatGiaTien(product.giaMax)}`
-                      : `${formatGiaTien(product.giaMin)} - ${formatGiaTien(
-                          product.giaMax
-                        )}`}
-                  </Title>
-                </Text>
+                <div className="product-info">
+                  <div className="product-name-price">
+                    <Text style={{ textAlign: "left" }} strong>
+                      {product.ten}
+                    </Text>
+                    <Title level={5} style={{ color: "red", margin: 0 }}>
+                      {formatGiaTien(product.listChiTietSanPham[0].giaTien)}
+                    </Title>
+                  </div>
+                </div>
               </Card>
             </Link>
           </Col>
         ))}
+      </Row>
+      <Row className="button-container">
+        <ViewAllButton></ViewAllButton>
       </Row>
       <Divider style={{ fontSize: 25, fontWeight: "bold", marginTop: 20 }}>
         THƯƠNG HIỆU NỔI TIẾNG

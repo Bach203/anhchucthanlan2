@@ -23,7 +23,6 @@ import { formatGiaTien, formatGiaTienVND } from "~/utils/formatResponse";
 import request from "~/utils/request";
 import { Link } from "react-router-dom";
 import { DataParam } from "~/interfaces/filterSanPham.type";
-
 const { Title } = Typography;
 const { Text } = Typography;
 
@@ -494,7 +493,7 @@ const SanPham: React.FC = () => {
             />
           </Space>
           <Row style={{ width: "100%" }} gutter={16}>
-            {sanPhams.map((product) => (
+            {sanPhams.slice(0, 9).map((product) => (
               <Col key={product.id} style={{ marginRight: 5 }}>
                 <Link
                   to={`/san-pham/detail/${product.id}`}
@@ -502,22 +501,48 @@ const SanPham: React.FC = () => {
                 >
                   <Card
                     hoverable
-                    style={{ width: 250, marginBottom: 10 }}
+                    className="Card"
+                    style={{ width: 263, marginBottom: 10 }}
                     cover={
-                      <img
-                        style={{ padding: "0px 10px" }}
-                        alt="example"
-                        src={product.listChiTietSanPham[0].anhUP}
-                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: 230,
+                          position: "relative", // Đảm bảo vị trí của các thành phần bên trong cover
+                        }}
+                      >
+                        <img
+                          style={{
+                            padding: "0px 10px",
+                            maxWidth: "100%",
+                            maxHeight: "100%",
+                            objectFit: "contain",
+                          }}
+                          alt="product"
+                          src={product.listChiTietSanPham[0].anhUP}
+                        />
+                        {/* Div cho phần "CHI TIẾT SẢN PHẨM" */}
+                        <div className="product-details-text">
+                          <Text style={{ color: "white", fontWeight: "bold" }}>
+                            CHI TIẾT SẢN PHẨM
+                          </Text>
+                        </div>
+                      </div>
                     }
                   >
                     <Divider style={{ margin: 0, padding: 0 }} />
-                    <Text style={{ textAlign: "left" }} strong>
-                      {product.ten}
-                      <Title level={5} style={{ color: "red", margin: 0 }}>
-                        {formatGiaTien(product.listChiTietSanPham[0].giaTien)}
-                      </Title>
-                    </Text>
+                    <div className="product-info">
+                      <div className="product-name-price">
+                        <Text style={{ textAlign: "left" }} strong>
+                          {product.ten}
+                        </Text>
+                        <Title level={5} style={{ color: "red", margin: 0 }}>
+                          {formatGiaTien(product.listChiTietSanPham[0].giaTien)}
+                        </Title>
+                      </div>
+                    </div>
                   </Card>
                 </Link>
               </Col>

@@ -40,7 +40,7 @@ export const WebFooter: React.FC = () => {
               <FiYoutube style={{ fontSize: 30, color: "white" }} />
             </a>
             <a href="https://www.youtube.com/" style={{ color: "white" }}>
-            https://www.youtube.com/
+              https://www.youtube.com/
             </a>
           </Space>
           <Space>
@@ -58,10 +58,7 @@ export const WebFooter: React.FC = () => {
             <a href="">
               <RiTiktokLine style={{ fontSize: 30, color: "white" }} />
             </a>
-            <a
-              href="https://www.tiktok.com/"
-              style={{ color: "white" }}
-            >
+            <a href="https://www.tiktok.com/" style={{ color: "white" }}>
               https://www.tiktok.com/
             </a>
           </Space>
@@ -117,7 +114,7 @@ export const WebFooter: React.FC = () => {
           <span style={{ color: "white", fontWeight: "bold", fontSize: 20 }}>
             <img src={logo} alt="" width={"70%"} style={{ marginLeft: 30 }} />
             <br />
-            <span style={{ marginLeft: 30 }}>Công ty cổ phần BEE City</span>
+            <span style={{ marginLeft: 110 }}>Công ty cổ phần BEE City</span>
           </span>
         </Col>
       </Row>

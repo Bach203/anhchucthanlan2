@@ -15,7 +15,6 @@ interface ChartThongKeProps {
     tongSoSanPhamDaBan: number;
     tongSoDonTaiQuay: number;
     tongSoDonOnline: number;
-    tongTienOnline: number;
   } | null;
 }
 
@@ -39,12 +38,7 @@ const ChartThongKe: React.FC<ChartThongKeProps> = ({ title, data }) => {
   const finalData = isDataValid ? data : fakeData;
 
   // Cộng tổng tiền Online vào tổng doanh thu
-  const tongDoanhThu = isDataValid
-    ? finalData.tongDoanhThu + finalData.tongTienOnline
-    : 0;
-
-  console.log(tongDoanhThu);
-  console.log(finalData.tongTienOnline);
+  const tongDoanhThu = isDataValid ? finalData.tongDoanhThu : 0;
 
   const chartData = {
     labels: [
