@@ -24,33 +24,36 @@ import { formatGiaTien } from "~/utils/formatResponse";
 import ViewAllButton from "../san-pham/viewAllBtn";
 import "./SPMN.css";
 import "./SPBC.css";
-
 const { Title, Text } = Typography;
 const { Meta } = Card;
-
 const Home: React.FC = () => {
   const [sanPhamMoiNhat, setSanPhamMoiNhat] = useState([]);
   const [sanPhamBanChay, setSanPhamBanChay] = useState([]);
-
   useEffect(() => {
     // Call API sản phẩm mới nhất
     const fetchMoiNhat = async () => {
       try {
         const res = await request.get("san-pham", {
-          params: { page: 1 },
+          params: {
+            page: 1,
+          },
         });
         setSanPhamMoiNhat(res.data.content);
+        console.log(res.data.content);
       } catch (error) {
         console.log(error);
-        message.error("Lấy dữ liệu sản phẩm mới thất bại");
+        message.error("Lấy dữ liệu địa hình sân thất bại");
       }
     };
 
     // Call API Sản phẩm bán chạy nhất
+
     const fetchBanChayNhat = async () => {
       try {
-        const res = await request.get("san-pham", {
-          params: { page: 1 },
+        const res = await request.get("/san-pham", {
+          params: {
+            page: 1,
+          },
         });
         setSanPhamBanChay(res.data.content);
       } catch (error) {
@@ -62,6 +65,7 @@ const Home: React.FC = () => {
     fetchMoiNhat();
     fetchBanChayNhat();
   }, []);
+  console.log(sanPhamMoiNhat);
   return (
     <>
       <Carousel autoplay>
@@ -141,7 +145,6 @@ const Home: React.FC = () => {
       <Divider style={{ fontSize: 25, fontWeight: "bold", marginTop: 20 }}>
         SẢN PHẨM BÁN CHẠY
       </Divider>
-      {/* Sản phẩm bán chạy */}
       <Row className="product-card-container" gutter={16}>
         {sanPhamBanChay.slice(4, 8).map((product) => (
           <Col key={product.id}>
@@ -186,7 +189,7 @@ const Home: React.FC = () => {
                 <div className="product-info">
                   <div className="product-name-price">
                     <Text style={{ textAlign: "left" }} strong>
-                      {product.ten}
+                      {product.listChiTietSanPham[0].sanPham.ten}
                     </Text>
                     <Title level={5} style={{ color: "red", margin: 0 }}>
                       {formatGiaTien(product.listChiTietSanPham[0].giaTien)}
