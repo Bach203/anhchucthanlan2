@@ -12,11 +12,13 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 import logo from "~/image/Logo_web.jpg";
+import logo1 from "~/image/black_on_white.png";
 import request, { requestLogout } from "~/utils/request";
-import { max } from "moment";
+
 import ModalDiaChi from "~/pages/login/dia-chi-khach-hang/DiaChiTableModal";
 import ModalThongTin from "~/pages/login/thong-tin/ThongTin";
 import ModalDoiMK from "~/pages/login/doi-mat-khau/DoiMatKhau";
+import "./header.css";
 
 type MenuItem = Required<MenuProps>["items"][number];
 const getItem = (
@@ -120,18 +122,19 @@ const Header: React.FC = () => {
         alignItems: "center",
       }}
     >
-      <div className="demo-logo">
+      <div className="logo-text-container">
         <img
-          src={logo}
+          src={logo1}
           alt=""
-          style={{ marginLeft: 10, paddingTop: 5 }}
-          width={"150px"}
-          height={"60px"}
+          className="logo2"
+          style={{ marginLeft: 10, paddingTop: 5, marginRight: 25 }}
+          width={"95%"}
+          height={"80px"}
         />
       </div>
       <Menu
         theme="light"
-        style={{ width: 400 }}
+        style={{ width: 350 }}
         mode="horizontal"
         defaultSelectedKeys={["1"]}
         items={items}

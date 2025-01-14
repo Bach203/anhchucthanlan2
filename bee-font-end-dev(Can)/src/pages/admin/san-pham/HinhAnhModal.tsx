@@ -52,10 +52,10 @@ const HinhAnhModal: React.FC<HinhAnhModalProps> = ({
 
   // Hàm xử lý khi nhấn "Ok" trong modal
   const okModal = async () => {
-    // if (fileList.length === 0) {
-    //   message.warning("Vui lòng tải ảnh lên");
-    //   return;
-    // }
+    if (fileList.length === 0) {
+      message.warning("Vui lòng tải ảnh lên");
+      return;
+    }
     // Chỉ lưu danh sách ảnh vào bộ nhớ trong ứng dụng React (fileList)
     console.log("Danh sách ảnh đã tải lên: ", fileList);
 

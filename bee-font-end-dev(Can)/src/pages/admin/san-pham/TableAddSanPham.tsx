@@ -116,6 +116,7 @@ function TableAddSanPham({
               kichCo: kichCo,
             },
             anhUP: urlImg,
+
             trangThai: "ACTIVE",
           });
         });

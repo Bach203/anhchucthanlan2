@@ -6,6 +6,7 @@ import { RiFacebookBoxLine, RiTiktokLine } from "react-icons/ri";
 import { CiLocationOn } from "react-icons/ci";
 import { SiZalo } from "react-icons/si";
 import logo from "~/image/logo_web1.png";
+import logo1 from "~/image/black_on_trans.png";
 
 export const WebFooter: React.FC = () => {
   return (
@@ -112,9 +113,9 @@ export const WebFooter: React.FC = () => {
         </Col>
         <Col span={6}>
           <span style={{ color: "white", fontWeight: "bold", fontSize: 20 }}>
-            <img src={logo} alt="" width={"70%"} style={{ marginLeft: 30 }} />
+            <img src={logo1} alt="" width={"70%"} style={{ marginLeft: 30 }} />
             <br />
-            <span style={{ marginLeft: 110 }}>Công ty cổ phần BEE City</span>
+            <span style={{ marginLeft: 40 }}>Công ty cổ phần Sneaker </span>
           </span>
         </Col>
       </Row>

@@ -5,7 +5,7 @@ import banner2 from "~/image/banner2.jpg";
 import banner3 from "~/image/banner1.jpg";
 import banner4 from "~/image/banner4.jpg";
 import logo_1 from "~/image/white_on_black.png";
-import nike from "~/image/brand-nike.jpg";
+import Nike from "~/image/brand-nike.jpg";
 import adidas from "~/image/brand-adidas.jpg";
 import puma from "~/image/brand-puma.jpg";
 import mizuno from "~/image/brand-mizuno.jpg";
@@ -146,7 +146,7 @@ const Home: React.FC = () => {
         SẢN PHẨM BÁN CHẠY
       </Divider>
       <Row className="product-card-container" gutter={16}>
-        {sanPhamBanChay.slice(4, 8).map((product) => (
+        {sanPhamBanChay.slice(0, 4).map((product) => (
           <Col key={product.id}>
             <Link
               to={`/san-pham/detail/${product.id}`}
@@ -210,7 +210,7 @@ const Home: React.FC = () => {
       <Row>
         <Col span={7} style={{ marginRight: 85 }}>
           <a href="http://localhost:5173/san-pham">
-            <img src={nike} alt="" width={"100%"} />
+            <img src={Nike} alt="" width={"100%"} />
             <span style={{ color: "#FF6600", fontWeight: "bolder" }}>
               GIÀY ĐÁ BÓNG NIKE{" "}
             </span>
@@ -234,7 +234,7 @@ const Home: React.FC = () => {
         </Col>
       </Row>
       {/* // Dòng 2 */}
-      <Row style={{ marginTop: 30 }}>
+      {/* <Row style={{ marginTop: 30 }}>
         <Col span={7} style={{ marginRight: 85 }}>
           <a href="http://localhost:5173/san-pham">
             <img src={mizuno} alt="" width={"100%"} />
@@ -259,9 +259,9 @@ const Home: React.FC = () => {
             </span>
           </a>
         </Col>
-      </Row>
+      </Row> */}
       {/* // Dòng 3 */}
-      <Row style={{ marginTop: 30 }}>
+      {/* <Row style={{ marginTop: 30 }}>
         <Col span={7} style={{ marginRight: 85 }}>
           <a href="http://localhost:5173/san-pham">
             <img src={grandsport} alt="" width={"100%"} />
@@ -286,7 +286,7 @@ const Home: React.FC = () => {
             </span>
           </a>
         </Col>
-      </Row>
+      </Row> */}
       {/* ĐỊA HÌNH SÂN */}
       {/* <Divider style={{ fontSize: 25, fontWeight: "bold", marginTop: 20 }}>
         CHỌN GIÀY THEO ĐỊA HÌNH SÂN

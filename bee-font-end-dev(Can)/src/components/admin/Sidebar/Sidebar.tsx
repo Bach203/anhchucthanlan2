@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Divider, Layout, Menu } from "antd";
 import { FaChartBar } from "react-icons/fa";
-
+import "./sidebar.css";
 import {
   ContainerOutlined,
   TeamOutlined,
@@ -11,7 +11,8 @@ import {
   GiftOutlined,
   AppstoreAddOutlined,
 } from "@ant-design/icons";
-import logo from "~/image/Logo1.png"
+import logo from "~/image/Logo1.png";
+import logo1 from "~/image/black_on_white.png";
 import type { MenuProps } from "antd";
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -93,7 +94,6 @@ const CustomSider: React.FC<{
       collapsed={collapsed}
       width={250}
       style={{
-
         background: colorBgContainer,
         position: "fixed",
         left: 0,
@@ -103,13 +103,19 @@ const CustomSider: React.FC<{
       }}
     >
       <div className="demo-logo-vertical">
-        <img src={logo} alt="" width={"100%"} height={"150%"} />
+        <img
+          src={logo1}
+          alt=""
+          className="logo1"
+          width={"90px"}
+          height={"70px"}
+        />
       </div>
       <Menu
         defaultSelectedKeys={[selectedKey]}
         mode="inline"
         items={items}
-        style={{ background: colorBgContainer }}
+        style={{ background: colorBgContainer, marginTop: 10 }}
       />
     </Layout.Sider>
   );

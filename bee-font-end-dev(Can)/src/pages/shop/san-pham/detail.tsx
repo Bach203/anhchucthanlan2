@@ -425,7 +425,7 @@ const detailSanPham: React.FC = () => {
           </Space>
           <Form layout="vertical">
             <Space direction="vertical">
-              <Text>Màu sắc: {idMauSac !== null ? titleMauSac : ""}</Text>
+              <Text>- Màu sắc: {idMauSac !== null ? titleMauSac : ""}</Text>
               <Radio.Group buttonStyle="solid" value={idMauSac}>
                 <Row gutter={[15, 15]}>
                   {dataMauSac.map((record: any) => (
