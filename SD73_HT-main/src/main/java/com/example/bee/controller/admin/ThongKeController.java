@@ -49,13 +49,13 @@ public class ThongKeController {
         return ResponseEntity.ok(service.thongKeTheoNam(startOfYear, endOfYear));
     }
 
-    @GetMapping("/san-pham-hot")
-    public ResponseEntity<List<ThongKeSanPhamHotResponse>> getSanPhamHot(
-            @RequestParam int topN,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM")YearMonth thang){
-        List<ThongKeSanPhamHotResponse> sanPhamHot = service.thongKeSanPhamHot(topN, thang);
-        return ResponseEntity.ok(sanPhamHot);
-    }
+//    @GetMapping("/san-pham-hot")
+//    public ResponseEntity<List<ThongKeSanPhamHotResponse>> getSanPhamHot(
+//            @RequestParam int topN,
+//            @RequestParam @DateTimeFormat(pattern = "yyyy-MM")YearMonth thang){
+//        List<ThongKeSanPhamHotResponse> sanPhamHot = service.thongKeSanPhamHot(topN, thang);
+//        return ResponseEntity.ok(sanPhamHot);
+//    }
 
     @GetMapping("khoang-ngay")
     public ResponseEntity<?> thongKeTheoKhoangNgay(

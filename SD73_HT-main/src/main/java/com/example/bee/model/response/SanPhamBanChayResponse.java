@@ -41,4 +41,5 @@ public class SanPhamBanChayResponse {
     private String duongDan;
 
     private Long soLuong;
+
 }

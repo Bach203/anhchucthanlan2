@@ -22,6 +22,7 @@ import java.util.Locale;
 @Component
 public class PDFExporter {
 
+
     public String formatLocalDateTime(LocalDateTime localDateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         return localDateTime.format(formatter);
@@ -136,7 +137,7 @@ public class PDFExporter {
             String thuocTinhSanPham = "[" + hdct.getChiTietSanPham().getMauSac().getTen()
                     + " - " + hdct.getChiTietSanPham().getKichCo().getKichCo()
                     + " - " + hdct.getChiTietSanPham().getLoaiDe().getTen()
-                    + " - " + hdct.getChiTietSanPham().getDiaHinhSan().getTen()
+//                    + " - " + hdct.getChiTietSanPham().getDiaHinhSan().getTen()
                     + "]";
             Paragraph sanPham = new Paragraph(tenSanPham, font);
             Paragraph thuocTinh = new Paragraph(thuocTinhSanPham, font);

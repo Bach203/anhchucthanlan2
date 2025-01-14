@@ -11,6 +11,7 @@ import com.example.bee.model.request.update_request.UpdatedSanPhamRequest;
 import com.example.bee.model.response.*;
 import com.example.bee.repository.*;
 import com.example.bee.service.SanPhamService;
+import io.jsonwebtoken.lang.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,9 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,7 +29,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     private SanPhamRepository repository;
 
     @Autowired
-    private ThuongHieuRepository  thuongHieuRepository;
+    private ThuongHieuRepository thuongHieuRepository;
 
     @Autowired
     private MauSacRepository mauSacRepository;
@@ -48,8 +47,8 @@ public class SanPhamServiceImpl implements SanPhamService {
     private SanPhamMapper mapper;
 
     @Override
-    public Page<SanPhamResponse> getAll(Integer page, Integer pageSize, String sortField, String sortOrder, String searchText, Long thuongHieuId, String trangThaiString) {
-        Sort  sort;
+    public Page<SanPhamResponse> getAll(Integer page, Integer pageSize, String sortField, String sortOrder, String searchText, List<Long> listThuongHieu, String trangThaiString, List<Long> listLoaiDe, List<Long> listMauSac, List<Long> listKichCo, BigDecimal minPrice, BigDecimal maxPrice) {
+        Sort sort;
         if ("ascend".equals(sortOrder)) {
             sort = Sort.by(sortField).ascending();
         } else if ("descend".equals(sortOrder)) {
@@ -65,10 +64,26 @@ public class SanPhamServiceImpl implements SanPhamService {
         } else {
             trangThai = CommonEnum.TrangThaiSanPham.valueOf(trangThaiString);
         }
+        if (listThuongHieu == null || listThuongHieu.isEmpty()) {
+            listThuongHieu = null; // Hoặc để danh sách này trống hoặc thay bằng giá trị mặc định
+        }
 
-        Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
-        Page<SanPham> pageSanPham = repository.findByAll(pageable, searchText, thuongHieuId, trangThai);
-        //THÊM MỚI
+        if (listLoaiDe == null || listLoaiDe.isEmpty()) {
+            listLoaiDe = null;
+        }
+
+        if (listMauSac == null || listMauSac.isEmpty()) {
+            listMauSac = null;
+        }
+
+        if (listKichCo == null || listKichCo.isEmpty()) {
+            listKichCo = null;
+        }
+        if (minPrice == null) {
+            minPrice = BigDecimal.ZERO;
+        }
+            Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
+        Page<SanPham> pageSanPham = repository.findByAll(pageable, searchText, listThuongHieu, trangThai, listLoaiDe, listMauSac, listKichCo,  minPrice, maxPrice);        //THÊM MỚI
         pageSanPham.getContent().forEach(sanPham -> {
             // Tính tổng số lượng của tất cả các ChiTietSanPham thuộc về SanPham này
             int tongSoLuong = sanPham.getListChiTietSanPham().stream()
@@ -90,7 +105,7 @@ public class SanPhamServiceImpl implements SanPhamService {
                 .map(sanPham -> mapper.convertEntityToResponse(sanPham))
                 .collect(Collectors.toList());
     }
-
+// tái hiện k chạy đc ông ơi, tái hiện xem
     @Override
     public SanPhamResponse add(CreatedSanPhamRequest request) {
         if (repository.existsByTen(request.getTen().trim())) {
@@ -134,11 +149,11 @@ public class SanPhamServiceImpl implements SanPhamService {
             throw new NotFoundException("Sản phẩm không tồn tại!");
         }
         SanPham detail = optional.get();
-        if (!request.getTen().equals(optional.get().getTen().trim())&&repository.existsByTen(request.getTen().trim())) {
+        if (!request.getTen().equals(optional.get().getTen().trim()) && repository.existsByTen(request.getTen().trim())) {
             throw new BadRequestException("Tên sản phẩm đã tồn tại trong hệ thống!");
         }
 
-        mapper.convertUpdateRequestToEntity(request,detail);
+        mapper.convertUpdateRequestToEntity(request, detail);
         return mapper.convertEntityToResponse(repository.save(detail));
     }
 
@@ -167,39 +182,38 @@ public class SanPhamServiceImpl implements SanPhamService {
 //    }
 
     @Override
-    public Page<SanPhamFilterResponse> filterSanPham(Integer page, Integer pageSize, Integer sapXep, BigDecimal minPrice, BigDecimal maxPrice, List<Long> listThuongHieu, List<Long> listMauSac, List<Long> listKichCo, List<Long> listLoaiDe, List<Long> listDiaHinhSan, String search) {//
+    public Page<SanPhamFilterResponse> filterSanPham(Integer page, Integer pageSize, Integer sapXep, BigDecimal minPrice, BigDecimal maxPrice, String search) {//
         Sort sort;
         if (sapXep == 3) {
             sort = Sort.by("ten").ascending();
         } else if (sapXep == 4) {
             sort = Sort.by("ten").descending();
         } else if (sapXep == 5) {
-            sort = Sort.by("ngayTao").ascending();
+            sort = Sort.by("ngay_tao").ascending();
         } else {
-            sort = Sort.by("ngayTao").descending();
+            sort = Sort.by("ngay_tao").descending();
         }
 
-        if (listThuongHieu == null || listThuongHieu.isEmpty()){
-            listThuongHieu = thuongHieuRepository.findByIdIn();
-        }
-        if (listDiaHinhSan == null || listDiaHinhSan.isEmpty()){
-            listDiaHinhSan = diaHinhSanRepository.findByIdIn();
-        }
-        if (listMauSac == null || listMauSac.isEmpty()){
-            listMauSac = mauSacRepository.findByIdIn();
-        }
-        if (listKichCo == null || listKichCo.isEmpty()){
-            listKichCo = kichCoRepository.findByIdIn();
-        }
-        if (listLoaiDe == null || listLoaiDe.isEmpty()){
-            listLoaiDe = loaiDeRepository.findByIdIn();
-        }
+//        if (listThuongHieu == null || listThuongHieu.isEmpty()){
+//            listThuongHieu = thuongHieuRepository.findByIdIn();
+//        }
+//        if (listDiaHinhSan == null || listDiaHinhSan.isEmpty()){
+//            listDiaHinhSan = diaHinhSanRepository.findByIdIn();
+//        }
+//        if (listMauSac == null || listMauSac.isEmpty()){
+//            listMauSac = mauSacRepository.findByIdIn();
+//        }
+//        if (listKichCo == null || listKichCo.isEmpty()){
+//            listKichCo = kichCoRepository.findByIdIn();
+//        }
+//        if (listLoaiDe == null || listLoaiDe.isEmpty()){
+//            listLoaiDe = loaiDeRepository.findByIdIn();
+//        }
 
         System.out.println(search);
-
-        Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
-
-        Page<SanPhamFilterResponse> sanPhamPage = repository.filterSanPham(pageable, minPrice, maxPrice, listThuongHieu,listMauSac, listDiaHinhSan, listKichCo, listLoaiDe, search);//
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        String finalSearch = "%" + search + "%"; // Thêm dấu % vào giá trị tìm kiếm
+        Page<SanPhamFilterResponse> sanPhamPage = repository.filterSanPham(pageable, minPrice, maxPrice, finalSearch);//
         return sanPhamPage;
     }
 

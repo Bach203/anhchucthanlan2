@@ -5,7 +5,13 @@ import com.example.bee.model.request.create_request.CreatedSanPhamRequest;
 import com.example.bee.model.request.update_request.UpdatedSanPhamRequest;
 import com.example.bee.service.SanPhamService;
 import jakarta.validation.Valid;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +30,34 @@ public class SanPhamController {
     @Autowired
     private SanPhamService service;
 
+    private List<Long> convertStringToList(String input) {
+        if (input == null || input.isEmpty()) {
+            return Collections.emptyList();  // Trả về danh sách rỗng nếu chuỗi đầu vào trống
+        }
+        return Arrays.stream(input.split(","))
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+    }
     @GetMapping()
     public ResponseEntity<?> getAll(
             @RequestParam(name = "page", defaultValue = "1") Integer page,
             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
             @RequestParam(name = "sortField", required = false) String sortField,
+            @RequestParam(name = "minPrice", required = false) BigDecimal minPrice,
+            @RequestParam(name = "maxPrice", required = false) BigDecimal maxPrice,
             @RequestParam(name = "sortOrder", defaultValue = "", required = false) String sortOrder,
             @RequestParam(name = "searchText", defaultValue = "") String searchText,
-            @RequestParam(name = "thuongHieuId", defaultValue = "") Long thuongHieuId,
+            @RequestParam(name = "listThuongHieu", defaultValue = "") List<Long> listThuongHieu,
+            @RequestParam(name = "listLoaiDe", defaultValue = "") List<Long> listLoaiDe,
+            @RequestParam(name = "listMauSac", defaultValue = "") List<Long> listMauSac,
+            @RequestParam(name = "listKichCo", defaultValue = "")List<Long> listKichCo,
             @RequestParam(name = "trangThai", required = false) String trangThaiString
     ) {
-        return ResponseEntity.ok(service.getAll(page, pageSize, sortField, sortOrder, searchText, thuongHieuId, trangThaiString));
+//        List<Long> thuongHieuIds = convertStringToList(listThuongHieu);
+//        List<Long> loaiDeIds = convertStringToList(listLoaiDe);
+//        List<Long> kichCoIds = convertStringToList(listKichCo);
+//        List<Long> mauSacIds = convertStringToList(listMauSac);
+        return ResponseEntity.ok(service.getAll(page, pageSize, sortField, sortOrder, searchText, listThuongHieu, trangThaiString, listLoaiDe, listMauSac, listKichCo, minPrice, maxPrice));
     }
 
     @PostMapping()
@@ -88,4 +111,20 @@ public class SanPhamController {
         return ResponseEntity.ok(service.getAllSanPhamNullCTSP());
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<?> filterSanPham(
+            @RequestParam(name = "page", defaultValue = "1") Integer page,
+            @RequestParam(name = "pageSize", defaultValue = "9") Integer pageSize,
+            @RequestParam(name = "sapXep",  defaultValue = "6") Integer sapXep,
+            @RequestParam(name = "minPrice", defaultValue = "0") BigDecimal minPrice,
+            @RequestParam(name = "maxPrice", defaultValue = "10000000")BigDecimal maxPrice,
+            @RequestParam(name = "listThuongHieu", required = false) List<Long> listThuongHieu,
+            @RequestParam(name = "listDiaHinhSan", required = false)List<Long> listDiaHinhSan,
+            @RequestParam(name = "listLoaiDe",  required = false) List<Long> listLoaiDe,
+            @RequestParam(name = "listKichCo", required = false)List<Long> listKichCo,
+            @RequestParam(name = "listMauSac",  required = false) List<Long> listMauSac,
+            @RequestParam(name = "search", defaultValue = "") String search
+    ) {
+        return ResponseEntity.ok(service.filterSanPham(page, pageSize, sapXep, minPrice, maxPrice, search));//
+    }
 }

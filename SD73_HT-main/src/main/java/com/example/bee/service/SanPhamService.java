@@ -11,7 +11,7 @@ import java.util.List;
 public interface SanPhamService {
 
     Page<SanPhamResponse> getAll(Integer page, Integer pageSize, String sortField, String sortOrder, String searchText,
-                                 Long thuongHieuId, String trangThaiString);
+                                 List<Long> listThuongHieu, String trangThaiString, List<Long> listLoaiDe, List<Long> listMauSac, List<Long> listKichCo, BigDecimal minPrice, BigDecimal maxPrice);
 
     List<SanPhamResponse> getAllSanPhamNullCTSP();
 
@@ -29,11 +29,6 @@ public interface SanPhamService {
             Integer sapXep,
             BigDecimal minPrice,
             BigDecimal maxPrice,
-            List<Long> listThuongHieu,
-            List<Long> listMauSac,
-            List<Long> listDiaHinhSan,
-            List<Long> listKichCo,
-            List<Long> listLoaiDe,
             String search
     );
 

@@ -26,7 +26,7 @@ public interface ThongKeService {
 
     Page<ThongKeTheoDoanhThuResponse> thongKeTheoDoanhThu(Integer page, Integer pageSize);
 
-    List<ThongKeSanPhamHotResponse> thongKeSanPhamHot(int topN, YearMonth yearMonth);
+//    List<ThongKeSanPhamHotResponse> thongKeSanPhamHot(int topN, YearMonth yearMonth);
 
     byte[] exportExcelThongKe() throws IOException;
 

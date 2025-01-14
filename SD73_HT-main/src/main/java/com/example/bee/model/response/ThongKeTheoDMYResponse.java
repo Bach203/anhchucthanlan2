@@ -21,8 +21,7 @@ import lombok.Setter;
                                 @ColumnResult(name = "tongSoDonHuy", type = Long.class),
                                 @ColumnResult(name = "tongSoSanPhamDaBan", type = Long.class),
                                 @ColumnResult(name = "tongSoDonTaiQuay", type = Long.class),
-                                @ColumnResult(name = "tongSoDonOnline", type = Long.class),
-                                @ColumnResult(name = "tongTienOnline",type = Long.class)
+                                @ColumnResult(name = "tongSoDonOnline",type = Long.class)
                         }
                 )
         }
@@ -41,6 +40,5 @@ public class ThongKeTheoDMYResponse {
 
     private Long tongSoDonOnline;
 
-    private Long tongTienOnline;
 
 }

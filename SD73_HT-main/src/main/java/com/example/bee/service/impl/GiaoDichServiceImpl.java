@@ -12,11 +12,13 @@ import com.example.bee.model.response.GiaoDichResponse;
 import com.example.bee.repository.GiaoDichRepository;
 import com.example.bee.repository.TaiKhoanRepository;
 import com.example.bee.service.GiaoDichService;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +42,7 @@ public class GiaoDichServiceImpl implements GiaoDichService {
             TaiKhoan taiKhoan = taiKhoanRepository.findById(request.getTaiKhoan().getId()).orElse(null);
             createGiaoDich.setTaiKhoan(taiKhoan);
         }
-        if(request.getNgayThanhToan()==null && request.getTrangThaiGiaoDich()== CommonEnum.TrangThaiGiaoDich.SUCCESS){
+        if (request.getNgayThanhToan() == null && request.getTrangThaiGiaoDich() == CommonEnum.TrangThaiGiaoDich.SUCCESS) {
             createGiaoDich.setNgayThanhToan(LocalDateTime.now());
         }
 
@@ -76,7 +78,7 @@ public class GiaoDichServiceImpl implements GiaoDichService {
         if (request.getPhuongThucThanhToan() != null) {
             giaoDich.setPhuongThucThanhToan(request.getPhuongThucThanhToan());
         }
-        if(request.getNgayThanhToan()==null && request.getTrangThaiGiaoDich()== CommonEnum.TrangThaiGiaoDich.SUCCESS){
+        if (request.getNgayThanhToan() == null && request.getTrangThaiGiaoDich() == CommonEnum.TrangThaiGiaoDich.SUCCESS) {
             giaoDich.setNgayThanhToan(LocalDateTime.now());
         }
         return giaoDichMapper.convertGiaoDichEntityToGiaoDichResponse(giaoDichRepository.save(giaoDich));

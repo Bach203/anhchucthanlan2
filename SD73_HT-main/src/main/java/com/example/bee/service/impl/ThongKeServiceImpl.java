@@ -69,12 +69,12 @@ public class ThongKeServiceImpl implements ThongKeService {
         return pageThongKe;
     }
 
-    @Override
-    public List<ThongKeSanPhamHotResponse> thongKeSanPhamHot(int topN, YearMonth yearMonth) {
-        LocalDate startDate = yearMonth.atDay(1);
-        LocalDate endDate = yearMonth.atEndOfMonth();
-        return repository.thongKeSanPhamHot(topN,startDate,endDate);
-    }
+//    @Override
+//    public List<ThongKeSanPhamHotResponse> thongKeSanPhamHot(int topN, YearMonth yearMonth) {
+//        LocalDate startDate = yearMonth.atDay(1);
+//        LocalDate endDate = yearMonth.atEndOfMonth();
+//        return repository.thongKeSanPhamHot(topN,startDate,endDate);
+//    }
 
     @Override
     public byte[] exportExcelThongKe() throws IOException {

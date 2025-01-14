@@ -44,3 +44,6 @@ public class SanPhamFilterResponse {
 
     private LocalDateTime ngayTao;
 }
+// response filter khác với bên sản phẩm nên mảng đang lỗi, filter có giá trị r đấy
+// cái ảnh của bọn tôi đợt trc là đẩy lên aws3 mà nó bị lỗi, mà thg bạn t kbt làm java nên nó lưu tạm thành blob cái chỗ anhUp trong fe ông vừa xoá ý
+// thấy dto trả ra khác không

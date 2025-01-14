@@ -20,20 +20,5 @@ public class SanPhamClientController {
         return ResponseEntity.ok(service.get5SanPhamBanChayNhat());
     }
 
-    @GetMapping("/filter")
-    public ResponseEntity<?> filterSanPham(
-            @RequestParam(name = "page", defaultValue = "1") Integer page,
-            @RequestParam(name = "pageSize", defaultValue = "9") Integer pageSize,
-            @RequestParam(name = "sapXep",  defaultValue = "6") Integer sapXep,
-            @RequestParam(name = "minPrice", defaultValue = "0") BigDecimal minPrice,
-            @RequestParam(name = "maxPrice", defaultValue = "10000000")BigDecimal maxPrice,
-            @RequestParam(name = "listThuongHieu", required = false) List<Long> listThuongHieu,
-            @RequestParam(name = "listDiaHinhSan", required = false)List<Long> listDiaHinhSan,
-            @RequestParam(name = "listLoaiDe",  required = false) List<Long> listLoaiDe,
-            @RequestParam(name = "listKichCo", required = false)List<Long> listKichCo,
-            @RequestParam(name = "listMauSac",  required = false) List<Long> listMauSac,
-            @RequestParam(name = "search", defaultValue = "") String search
-    ) {
-        return ResponseEntity.ok(service.filterSanPham(page, pageSize, sapXep, minPrice, maxPrice, listThuongHieu, listMauSac, listKichCo, listLoaiDe,listDiaHinhSan, search));//
-    }
+
 }

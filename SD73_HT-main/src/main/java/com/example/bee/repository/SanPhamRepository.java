@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -18,47 +19,73 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface SanPhamRepository extends JpaRepository<SanPham, Long> {
+public interface SanPhamRepository extends CrudRepository<SanPham, Long> {
 
     @Query("SELECT sp FROM SanPham sp LEFT JOIN ChiTietSanPham ctsp ON sp.id = ctsp.sanPham.id WHERE ctsp.id IS NULL ORDER BY sp.ngayTao DESC")
     List<SanPham> getAllSanPhamNullCTSP();
 
     @Query("SELECT DISTINCT obj FROM SanPham obj " +
             "INNER JOIN obj.listChiTietSanPham ctsp " +
+            "LEFT JOIN obj.thuongHieu th " +
+            "LEFT JOIN ctsp.loaiDe ld " +
+            "LEFT JOIN ctsp.mauSac ms " +
+            "LEFT JOIN ctsp.kichCo kc " +
             "WHERE (obj.ma LIKE %:searchText% OR obj.ten LIKE %:searchText%) " +
-            "AND (:thuongHieuId IS NULL OR obj.thuongHieu.id = :thuongHieuId ) " +
+            "AND (:thuongHieuId IS NULL OR th.id IN :thuongHieuId) " +
             "AND (:trangThai IS NULL OR obj.trangThai = :trangThai) " +
+            "AND (:loaiDeIds IS NULL OR ld.id IN :loaiDeIds) " +
+            "AND (:mauSacIds IS NULL OR ms.id IN :mauSacIds) " +
+            "AND (:kichCoIds IS NULL OR kc.id IN :kichCoIds) " +
+            "AND (:minPrice IS NULL OR ctsp.giaTien >= :minPrice) " +
+            "AND (:maxPrice IS NULL OR ctsp.giaTien <= :maxPrice) " +
             "ORDER BY obj.ngayTao DESC")
-    Page<SanPham> findByAll(Pageable pageable, String searchText, Long thuongHieuId, CommonEnum.TrangThaiSanPham trangThai);
+    Page<SanPham> findByAll(Pageable pageable,
+                            @Param("searchText") String searchText,
+                            @Param("thuongHieuId") List<Long> thuongHieuId,
+                            @Param("trangThai") CommonEnum.TrangThaiSanPham trangThai,
+                            @Param("loaiDeIds") List<Long> loaiDeIds,
+                            @Param("mauSacIds") List<Long> mauSacIds,
+                            @Param("kichCoIds") List<Long> kichCoIds,
+                            @Param("minPrice") BigDecimal minPrice,
+                            @Param("maxPrice") BigDecimal maxPrice);
 
     boolean existsByTen(String ten);
 
     @Query("SELECT sp FROM SanPham sp WHERE sp.trangThai = 'ACTIVE' ORDER BY sp.ngayTao DESC")
     List<SanPham> get5SanPhamMoiNhat();
-
-    @Query(value = "SELECT NEW com.example.bee.model.response.SanPhamFilterResponse(sp.id, sp.ten, MIN(cps.giaTien), MAX(cps.giaTien), hi.duongDan, sp.ngayTao) " +
+    @Query(value = "SELECT new com.example.bee.model.response.SanPhamFilterResponse(" +
+            "sp.id, " +
+            "sp.ten, " +
+            "MIN(cps.giaTien), " +
+            "MAX(cps.giaTien), " +
+            "hi.duongDan, " +
+            "sp.ngayTao) " +
             "FROM SanPham sp " +
-            "JOIN ChiTietSanPham cps ON sp.id = cps.sanPham.id " +
-            "JOIN HinhAnhSanPham hi ON sp.id = hi.sanPham.id " +
+            "LEFT JOIN ChiTietSanPham cps ON sp.id = cps.sanPham.id " +
+            "LEFT JOIN HinhAnhSanPham hi ON sp.id = hi.sanPham.id " +
+            "LEFT JOIN MauSac ms ON ms.id = cps.sanPham.id " +
+            "LEFT JOIN ThuongHieu th ON th.id = sp.thuongHieu.id " +
+            "LEFT JOIN LoaiDe ld on ld.id = cps.loaiDe.id " +
+            "LEFT JOIN KichCo kc on kc.id = cps.kichCo.id " +
             "WHERE cps.trangThai = 'ACTIVE' " +
-            "AND (sp.ten LIKE %:search% OR CAST(cps.kichCo.kichCo as string) LIKE %:search% OR cps.diaHinhSan.ten LIKE %:search% OR cps.loaiDe.ten LIKE %:search% OR cps.mauSac.ten LIKE %:search% OR sp.thuongHieu.ten LIKE %:search%) " +
-            "AND hi.id = (SELECT MIN(hi2.id) FROM HinhAnhSanPham hi2 WHERE hi2.sanPham.id = sp.id) " +
+            "AND (" +
+            "(:search IS NOT NULL AND (" +
+            "sp.ten LIKE CONCAT('%', :search, '%') " +
+            "OR CAST(cps.kichCo.kichCo as string)  LIKE CONCAT('%', :search, '%') " +
+            "OR ld.ten LIKE CONCAT('%', :search, '%') " +
+            "OR ms.ten LIKE CONCAT('%', :search, '%') " +
+            "OR th.ten LIKE CONCAT('%', :search, '%')" +
+            ")) " +
+            "OR :search IS NULL) " +
             "AND cps.giaTien BETWEEN :minPrice AND :maxPrice " +
-            "AND ( sp.thuongHieu.id  IN  :listThuongHieu  ) " +
-            "AND ( cps.mauSac.id   IN :listMauSac ) " +
-            "AND ( cps.diaHinhSan.id   IN :listDiaHinhSan  ) " +
-            "AND ( cps.kichCo.id   IN  :listKichCo  ) " +
-            "AND ( cps.loaiDe.id   IN  :listLoaiDe  ) " +
-            "GROUP BY sp.id, sp.ten, hi.duongDan, sp.ngayTao")
+            "GROUP BY hi.duongDan, sp.ten, sp.id, sp.ngayTao " +
+            "ORDER BY sp.ngayTao DESC", nativeQuery = false)
     Page<SanPhamFilterResponse> filterSanPham(Pageable pageable,
                                               @Param("minPrice") BigDecimal minPrice,
                                               @Param("maxPrice") BigDecimal maxPrice,
-                                              @Param("listThuongHieu") List<Long> listThuongHieu,
-                                              @Param("listMauSac") List<Long> listMauSac,
-                                              @Param("listDiaHinhSan") List<Long> listDiaHinhSan,
-                                              @Param("listKichCo") List<Long> listKichCo,
-                                              @Param("listLoaiDe") List<Long> listLoaiDe,
                                               @Param("search") String search);
+
+
 
 
     @Query("SELECT NEW com.example.bee.model.response.SanPhamMoiNhatResponse(sp.id, sp.ten, MIN(cps.giaTien), MAX(cps.giaTien), hi.duongDan) " +
